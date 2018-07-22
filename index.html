@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>L(G)</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta http-equiv="content-language" content="tr">
+		<meta http-equiv="cache-control" content="cache">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		<style>
+		body,html{font-family: sans-serif;}
+		div {margin:20px;padding:15px;}
+		.regel{color:black;background: yellow; margin: 5px; min-width: 50px; width:auto; display:inline-block; text-align:center;padding:2px;}
+		.nicht_terminal{color:black;background: lightgreen;margin: 5px; min-width: 50px; width:auto; padding:2px; max-width:auto; display:inline-block; text-align:center}
+		.terminal{color:white;padding:3px 6px;margin:3px;background:rgba(255,0,0,0.45)}
+		.ausgangspunkt{ background: blue; color:white;margin: 5px; min-width: 50%; width:auto; padding:2px; max-width:auto; display:inline-block; text-align:center}
+		.schritt{display:block;background:gray;margin:5px; padding:5px;color:white;}
+		.einstellung{display:block;background:lightgray;padding:15px;text-align: left}
+		.word{background:lightblue;text-align:center;padding:15px}
+
+		.sideView{margin:0px;display:inline-block;width: calc(50% - 13px);padding:5px;}
+		#produktionsregel{width:100%; min-width:width:100%;min-height:250px; height:auto;font-size:20px;margin-bottom:10px;display:block;padding:15px;}
+		#determiniert{width:100%; min-width:width:100%;min-height:250px; height:auto;font-size:20px;margin-bottom:10px;display:block;padding:15px;}
+		
+		@media only screen and (max-width: 768px) {
+			.sideView{margin:0px;display:inline-block;width:100%;padding:0px;}
+
+		}
+
+		.eingabefeld{}
+		.buttons{display:block;text-align: right;margin:0px;padding:5px;}
+		.btns{padding:5px;}
+		.unwaehlbar{opacity:0.15}
+		.click{cursor:pointer;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none; user-select: none;}
+		.click:hover{text-decoration: underline;}
+		.bordering{border-radius:3px;border:1px solid gray;}
+		.text-red{color:red!important}
+		.text-green{color:green!important}
+		</style>
+
+	</head>
+		<body>
+		<div class="bordering einstellung">
+			<div class="sideView">
+				<label for="produktionsregel">Produktionsregel</label>
+				<textarea class="bordering" id="produktionsregel">S->bX|bSb,
+X->AXa|a,
+bAa->aba,
+bab->abb,
+bAA->AAb,
+Aab->aab</textarea>
+			</div>
+			<div class="sideView">
+				<label for="determiniert">Wenn es determiniert: (JavaScript)</label>
+				<textarea class="bordering" id="determiniert">
+/*
+ * output = Enthält die Ausgabe im unteren blauen Kasten
+ * word   = Enthält das Wort.  
+ *
+*/
+
+output += '<br>';
+
+var potenz=[];
+var count = 0;
+var arrx = Array.from(word);
+arrx.forEach(function callback(v,k){
+	count++;
+	if((k==arrx.length-1) || (v != arrx[k+1])){
+		output +=v+'<sup>'+count+'</sup>';
+		potenz.push(parseInt(count));
+		count = 0;
+	}
+});
+var countPot = potenz.length;
+if(countPot==2){
+	if(potenz[0]==1 && potenz[1]==1){
+		output += '<span class="text-green">OK</span>';
+	}else{
+		output += '<span class="text-red">ERROR</span>';
+	}
+}
+if(countPot==3){
+	if((potenz[0]+1)==potenz[2] && potenz[1]==1){
+		output += '<span class="text-green">OK</span>';
+	}else{
+		output += '<span class="text-red">ERROR</span>';
+	}
+}
+if(countPot==4){
+	if(potenz[2]==(potenz[0]+1) && potenz[1]==(potenz[3]+1)){
+		output += '<span class="text-green">OK</span>';
+	}else{
+		output += '<span class="text-red">ERROR</span>';
+	}
+}
+if(countPot>4){
+	output += '<span class="text-red">ERROR</span>';
+}
+				</textarea>
+			</div>
+			<div class="buttons">
+				<button type="button" class="bordering click btns" onclick="starte();">Neustart!</button>
+				<button type="button" class="bordering click btns" onclick="starte();">Sprache generieren!</button>
+			</div>
+		</div>
+		<div class="bordering word" id="word">S</div>
+		<div class="bordering eingabefeld" id="eingabe">
+		## LOAD ##
+		</div>
+
+
+		<div class="bordering eingabefeld" id="ausgabe">
+		## LOAD ##
+		</div>
+
+	<script src="script.js"></script>
+
+	</body>
+</html>
